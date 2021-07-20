@@ -15,6 +15,14 @@ class _PriceScreenState extends State<PriceScreen> {
   double ltcToFiat = 0;
   double ethToFiat = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      updateConversions();
+    });
+  }
+
   void updateConversions() async {
     CryptoInfo cryptoInfo = CryptoInfo();
 
