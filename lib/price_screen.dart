@@ -17,17 +17,13 @@ class _PriceScreenState extends State<PriceScreen> {
 
   void updateConversions() async {
     CryptoInfo cryptoInfo = CryptoInfo();
-    setState(() async {
-      btcToFiat = await cryptoInfo.getExchangeRate(
-          cryptoCurrency: 'BTC', fiatCurrency: selectedCurrency);
-      ltcToFiat = await cryptoInfo.getExchangeRate(
-          cryptoCurrency: 'LTC', fiatCurrency: selectedCurrency);
-      ethToFiat = await cryptoInfo.getExchangeRate(
-          cryptoCurrency: 'ETH', fiatCurrency: selectedCurrency);
-    });
 
-    // ethToFiat = cryptoInfo.getExchangeRate(
-    //     cryptoCurrency: 'ETH', fiatCurrency: selectedCurrency);
+    btcToFiat = await cryptoInfo.getExchangeRate(
+        cryptoCurrency: 'BTC', fiatCurrency: selectedCurrency);
+    ltcToFiat = await cryptoInfo.getExchangeRate(
+        cryptoCurrency: 'LTC', fiatCurrency: selectedCurrency);
+    ethToFiat = await cryptoInfo.getExchangeRate(
+        cryptoCurrency: 'ETH', fiatCurrency: selectedCurrency);
   }
 
   DropdownButton<String> getAndroidDropDown() {
@@ -89,69 +85,23 @@ class _PriceScreenState extends State<PriceScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = $btcToFiat $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 LTC = $ltcToFiat $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 ETH = $ethToFiat $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CryptoCard(
+                  cryptoCurrency: 'BTC',
+                  selectedCurrency: selectedCurrency,
+                  conversionRate: btcToFiat),
+              CryptoCard(
+                  cryptoCurrency: 'LTC',
+                  selectedCurrency: selectedCurrency,
+                  conversionRate: ltcToFiat),
+              CryptoCard(
+                  cryptoCurrency: 'ETH',
+                  selectedCurrency: selectedCurrency,
+                  conversionRate: ethToFiat),
+            ],
           ),
           Container(
             height: 150.0,
@@ -161,6 +111,38 @@ class _PriceScreenState extends State<PriceScreen> {
             child: getPicker(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CryptoCard extends StatelessWidget {
+  CryptoCard(
+      {required this.cryptoCurrency,
+      required this.selectedCurrency,
+      required this.conversionRate});
+  final cryptoCurrency;
+  final selectedCurrency;
+  final conversionRate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.lightBlueAccent,
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
+        child: Text(
+          '1 $cryptoCurrency = $conversionRate $selectedCurrency',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20.0,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
